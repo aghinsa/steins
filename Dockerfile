@@ -78,12 +78,13 @@ RUN \
 RUN \
   pip install magic-wormhole
 
-RUN mkdir ~/Heaven && \
-    cd ~/Heaven && \
-    git clone https://github.com/mapillary/OpenSfM.git && \
-    cd ~/Heaven/OpenSfM/ && \
-    python -r requirements.txt && \
-    python setup.py build
+# RUN mkdir ~/Heaven && \
+#     cd ~/Heaven && \
+#     git clone https://github.com/mapillary/OpenSfM.git
+# RUN \
+#     cd ~/Heaven/OpenSfM/ && \
+#     python -r requirements.txt && \
+#     python setup.py build
 
 #openMVS
 RUN \
@@ -110,4 +111,4 @@ apt-get -y install freeglut3-dev libglew-dev libglfw3-dev && \
 git clone https://github.com/cdcseacave/openMVS.git openMVS && \
 mkdir openMVS_build && cd openMVS_build && \
 cmake . ../openMVS -DCMAKE_BUILD_TYPE=Release -DVCG_ROOT="~/building/vcglib" && \
-make -j2 && sudo make install
+make -j2 &&  make install
