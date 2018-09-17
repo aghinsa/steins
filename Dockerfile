@@ -1,11 +1,11 @@
-#FROM ubuntu:16.04
-FROM 9.2-devel-ubuntu16.04
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-            libcudnn7=$CUDNN_VERSION-1+cuda9.2 \
-            libcudnn7-dev=$CUDNN_VERSION-1+cuda9.2 && \
-    apt-mark hold libcudnn7 && \
-    rm -rf /var/lib/apt/lists/*
+FROM ubuntu:16.04
+#FROM 9.2-devel-ubuntu16.04
+#
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#             libcudnn7=$CUDNN_VERSION-1+cuda9.2 \
+#             libcudnn7-dev=$CUDNN_VERSION-1+cuda9.2 && \
+#     apt-mark hold libcudnn7 && \
+#     rm -rf /var/lib/apt/lists/*
 
 
 
@@ -73,9 +73,41 @@ RUN \
                 scipy \
                 xmltodict==0.10.2 \
                 cloudpickle==0.4.0 \
-                loky==1.2.1 \
-                magic-wormhole
+                loky==1.2.1
+#INSTALL wormhole
+RUN \
+  pip install magic-wormhole
+
 RUN mkdir ~/Heaven && \
     cd ~/Heaven && \
     git clone https://github.com/mapillary/OpenSfM.git && \
-    
+    cd ~/Heaven/OpenSfM/ && \
+    python -r requirements.txt && \
+    python setup.py build
+
+#openMVS
+RUN \
+apt-get update -qq &&  apt-get install -qq && \
+apt-get -y install build-essential git mercurial cmake libpng-dev libjpeg-dev libtiff-dev libglu1-mesa-dev libxmu-dev libxi-dev && \
+mkdir ~/building && \
+cd ~/building && \
+hg clone https://bitbucket.org/eigen/eigen#3.2 && \
+mkdir eigen_build && cd eigen_build && \
+cmake . ../eigen && \
+make &&  make install && \
+cd ~/building && \
+apt-get -y install libboost-iostreams-dev libboost-program-options-dev libboost-system-dev libboost-serialization-dev && \
+apt-get -y install libopencv-dev && \
+apt-get -y install libcgal-dev libcgal-qt5-dev && \
+git clone https://github.com/cdcseacave/VCG.git vcglib && \
+apt-get -y install libatlas-base-dev libsuitesparse-dev && \
+git clone https://ceres-solver.googlesource.com/ceres-solver ceres-solver && \
+mkdir ceres_build && cd ceres_build && \
+cmake . ../ceres-solver/ -DMINIGLOG=ON -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
+make -j2 && make install && \
+cd ~/building && \
+apt-get -y install freeglut3-dev libglew-dev libglfw3-dev && \
+git clone https://github.com/cdcseacave/openMVS.git openMVS && \
+mkdir openMVS_build && cd openMVS_build && \
+cmake . ../openMVS -DCMAKE_BUILD_TYPE=Release -DVCG_ROOT="~/building/vcglib" && \
+make -j2 && sudo make install
