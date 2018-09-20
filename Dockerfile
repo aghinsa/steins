@@ -34,18 +34,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
-# Install Ceres from source
-RUN \
-    mkdir -p /source && cd /source && \
-    wget http://ceres-solver.org/ceres-solver-1.14.0.tar.gz && \
-    tar xvzf ceres-solver-1.14.0.tar.gz && \
-    cd /source/ceres-solver-1.14.0 && \
-    mkdir -p build && cd build && \
-    cmake .. -DCMAKE_C_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF && \
-    make install && \
-    cd / && \
-    rm -rf /source/ceres-solver-1.14.0 && \
-    rm -f /source/ceres-solver-1.14.0.tar.gz
+
 
 
 # Install opengv from source
@@ -78,13 +67,7 @@ RUN \
 RUN \
   pip install magic-wormhole
 
-# RUN mkdir ~/Heaven && \
-#     cd ~/Heaven && \
-#     git clone https://github.com/mapillary/OpenSfM.git
-# RUN \
-#     cd ~/Heaven/OpenSfM/ && \
-#     python -r requirements.txt && \
-#     python setup.py build
+
 
 #openMVS
 RUN \
@@ -112,3 +95,36 @@ git clone https://github.com/cdcseacave/openMVS.git openMVS && \
 mkdir openMVS_build && cd openMVS_build && \
 cmake . ../openMVS -DCMAKE_BUILD_TYPE=Release -DVCG_ROOT="~/building/vcglib" && \
 make -j2 &&  make install
+
+# Install Ceres from source
+RUN \
+    mkdir -p /source && cd /source && \
+    wget http://ceres-solver.org/ceres-solver-1.14.0.tar.gz && \
+    tar xvzf ceres-solver-1.14.0.tar.gz && \
+    cd /source/ceres-solver-1.14.0 && \
+    mkdir -p build && cd build && \
+    cmake .. -DCMAKE_C_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF && \
+    make install && \
+    cd / && \
+    rm -rf /source/ceres-solver-1.14.0 && \
+    rm -f /source/ceres-solver-1.14.0.tar.gz
+
+#opensfm
+RUN \
+    cd ~ && \
+    git clone https://github.com/mapillary/OpenSfM.git && \
+    cd OpenSfm && \
+    pip install -r requirements.txt && \
+    python setup.py build
+
+RUN echo "export PATH=$PATH:/usr/local/bin/OpenMvs" >> ~/.profile \
+    source ~/.profile
+RUN rm -rf ~/building
+
+#openmvg
+RUN apt-get install -y libpng-dev libjpeg-dev libtiff-dev libxxf86vm1 libxxf86vm-dev libxi-dev libxrandr-dev && \
+  apt-get install -y graphviz && \
+  git clone --recursive https://github.com/openMVG/openMVG.git && \
+  mkdir openMVG_Build && cd openMVG_Build && \
+  cmake -DCMAKE_BUILD_TYPE=RELEASE ../openMVG/src/ && \
+  cmake --build . --target install
