@@ -237,38 +237,85 @@ class List {
       }
 };
 
-  int main()
-  {
-    List l,q;
-    ListNode *a,*b;
-    a=l.push_back(1);
-    b=l.push_back(2);
-    l.push_back(3);
-    l.push_back(4);
-    //l.push_back(5);
-
-
-
-    for(int i=10;i<=12;i++)
-      q.push_back(i);
-
-    l.print();
-    cout<<endl;
-    q.print();
-    cout<<endl;
-
-    // l.reverse_segment(a,b);
-    // l.print();
-    // cout<<endl;
-
-    // l.splice(b,q);
-    // l.print();
-    // cout<<endl;
-
-    l.swap_pairs();
-    l.print();
-    cout<<endl;
-
-
-    return 0;
-  }
+int main() {
+    int n, i, op, v1, v2;
+    ListNode *ln;
+    cin >> n;
+    List l = List();
+    map<int, ListNode*> vp;
+    while (n--) {
+        cin >> op;
+        switch (op) {
+        // push back
+        case 1:
+            cin >> v1;
+            ln = l.push_back(v1);
+            assert(ln->val == v1);
+            vp[v1] = ln;
+            break;
+        // push front
+        case 2:
+            cin >> v1;
+            ln = l.push_front(v1);
+            assert(ln->val == v1);
+            vp[v1] = ln;
+            break;
+        // insert
+        case 3:
+            cin >> v1 >> v2;
+            if (vp.find(v1) != vp.end()) {
+                ln = l.insert(vp[v1], v2);
+                assert(ln->val == v2);
+                vp[v2] = ln;
+            }
+            break;
+        // is empty?
+        case 4:
+            cout << l.is_empty() << endl;
+            break;
+        // move to front
+        case 5:
+            cin >> v1;
+            if (vp.find(v1) != vp.end()) {
+                l.move_to_front(vp[v1]);
+            }
+            break;
+        // swap pairs
+        case 6:
+            l.swap_pairs();
+            break;
+        // reverse segment
+        case 7:
+            cin >> v1 >> v2;
+            if (vp.find(v1) != vp.end() && vp.find(v2) != vp.end()) {
+                ln = vp[v1];
+                while (ln != NULL && ln != vp[v2]) {
+                    ln = ln->next;
+                }
+                if (ln != NULL) {
+                    l.reverse_segment(vp[v1], vp[v2]);
+                }
+            }
+            break;
+        // splice
+        case 8:
+            int num;
+            cin >> v1 >> num;
+            if (vp.find(v1) != vp.end()) {
+                List l1;
+                for (i=0; i<num; i++) {
+                    cin >> v2;
+                    ln = l1.push_back(v2);
+                    assert(ln->val == v2);
+                    vp[v2] = ln;
+                }
+                l.splice(vp[v1], l1);
+            }
+            break;
+        // print
+        case 9:
+            l.print();
+            break;
+        }
+    }
+}
