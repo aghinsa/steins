@@ -204,20 +204,18 @@ class List {
 
       void splice(ListNode *ln, List l)
       {
-        ListNode *lh,*lt,*lnp;
-        lnp=ln->prev;
-        lh=l.get_head();
-        lt=l.get_tail();
-        lt->next=ln;
-        ln->prev=lt;
-        if(lnp!=NULL)
+        if(ln==begin)
         {
-          lnp->next=lh;
-          lh->prev=lnp;
+          begin=l.get_head();
+          l.get_tail()->next=ln;
+          ln->prev=l.get_tail();
         }
         else
         {
-          begin=lh;
+          l.get_tail()->next=ln;
+          ln->prev->next=l.get_head();
+          l.get_head()->prev=ln->prev;
+          ln->prev=l.get_tail();
         }
       }
 
