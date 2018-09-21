@@ -113,12 +113,12 @@ RUN \
 RUN \
     cd ~ && \
     git clone https://github.com/mapillary/OpenSfM.git && \
-    cd OpenSfm && \
+    cd OpenSfM && \
     pip install -r requirements.txt && \
     python setup.py build
 
-RUN echo "export PATH=$PATH:/usr/local/bin/OpenMvs" >> ~/.profile \
-    source ~/.profile
+RUN echo "export PATH=$PATH:/usr/local/bin/OpenMvs" >> ~/.bashrc
+
 RUN rm -rf ~/building
 
 #openmvg
