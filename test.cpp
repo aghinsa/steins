@@ -103,6 +103,18 @@ class List {
           begin->prev=ln;
           begin=ln;
         }
+       else
+       {
+         ListNode *lnp;
+         lnp=ln->prev;
+         begin->prev=ln;
+         lnp->next=ln->next;
+         ln->next->prev=lnp;
+         ln->next=begin;
+         begin=ln;
+         ln->prev=NULL;
+
+       }
       }
 
       void swap_pairs()
@@ -259,7 +271,8 @@ class List {
     // l.print();
     // cout<<endl;
 
-    l.splice(a,q);
+    //l.splice(a,q);
+    l.move_to_front(b);
     l.print();
     cout<<endl;
 
