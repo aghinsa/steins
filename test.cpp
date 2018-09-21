@@ -171,6 +171,52 @@ class List {
 
       }
 
+      void reverse_segment(ListNode *ln1, ListNode *ln2)
+      {
+        // 7: reverse list from nodes ln1 to ln2
+        // if(l1==begin)
+
+        //   begin=l2;
+        ListNode *idxe,*idxb,*idxiprev,*idxinext;
+        idxinext=ln2->next;
+        idxiprev=ln1->prev;
+        idxe=ln2;
+        idxb=ln1;
+        while(true)
+        {
+          idxe->next=ln1;
+          if(idxinext!=NULL)
+            idxinext->prev=idxe->prev;
+          else
+            end=idxe->prev;
+          idxe->prev->next=idxinext;
+          idxe->prev=idxb->prev;
+          if(idxiprev!=NULL)
+            idxb->prev->next=idxe;
+          else
+            begin=idxe;
+          idxb->prev=idxe;
+          //update
+          if(idxinext!=NULL)
+            idxe=idxinext->prev;
+          else
+            idxe=end;
+          if(idxiprev!=NULL)
+            idxb=idxiprev->next;
+          else
+            idxb=begin;
+
+          if(idxe==ln1)
+            break;
+
+        }
+      }
+
+      void splice(ListNode *ln, List l)
+      {
+        // 8: splice
+      }
+
       void print()
       {
         // 9: print all elements
@@ -182,15 +228,23 @@ class List {
           cp=cp->next;
         }
       }
-  };
+};
 
   int main()
   {
     List l;
-    for(int i=1;i<=5;i++)
-      l.push_front(i);
+    ListNode *a,*b;
+    l.push_back(1);
+    a=l.push_back(2);
+    l.push_back(3);
+    l.push_back(4);
+    b=l.push_back(5);
+    l.push_back(6)
+
+
     l.print();
-    l.swap_pairs();
+    //l.swap_pairs();
+    l.reverse_segment(a,b);
     cout<<endl;
     l.print();
 

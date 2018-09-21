@@ -41,5 +41,5 @@ VisualSfm sfm $in $ou/.nvm
 colmap
 
 colmap automatic_reconstructor \
-    --workspace_path $DATASET_PATH \
-    --image_path $DATASET_PATH/images
+    --workspace_path ./ \
+    --image_path ./images
