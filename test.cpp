@@ -148,10 +148,20 @@ class List {
           idx->prev=idx->next;
           idx->next=idx->next->next;
           idx->prev->next=idx;
+          //this is chane
+          if(idx->next==NULL)
+          {
+            idxPrev=idx;
+            idx=idx->next;
+            break;
+          }
           idx->next->prev=idx;
           //need to update idx
           idxPrev=idx;
           idx=idx->next;
+
+
+
         }while(idxPrev->next->next!=NULL);
 
         if(idxPrev->next==NULL)
@@ -177,7 +187,7 @@ class List {
   int main()
   {
     List l;
-    for(int i=1;i<=2;i++)
+    for(int i=1;i<=5;i++)
       l.push_front(i);
     l.print();
     l.swap_pairs();
