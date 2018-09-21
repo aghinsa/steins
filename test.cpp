@@ -173,42 +173,78 @@ class List {
 
       void reverse_segment(ListNode *ln1, ListNode *ln2)
       {
-        // 7: reverse list from nodes ln1 to ln2
-        // if(l1==begin)
+        ListNode *ln1n,*ln2p;
+        ListNode* a[3];
 
-        //   begin=l2;
-        ListNode *idxe,*idxb,*idxiprev,*idxinext;
-        idxinext=ln2->next;
-        idxiprev=ln1->prev;
-        idxe=ln2;
-        idxb=ln1;
-        while(true)
+        while(ln1!=ln2)
         {
-          idxe->next=ln1;
-          if(idxinext!=NULL)
-            idxinext->prev=idxe->prev;
-          else
-            end=idxe->prev;
-          idxe->prev->next=idxinext;
-          idxe->prev=idxb->prev;
-          if(idxiprev!=NULL)
-            idxb->prev->next=idxe;
-          else
-            begin=idxe;
-          idxb->prev=idxe;
-          //update
-          if(idxinext!=NULL)
-            idxe=idxinext->prev;
-          else
-            idxe=end;
-          if(idxiprev!=NULL)
-            idxb=idxiprev->next;
-          else
-            idxb=begin;
-
-          if(idxe==ln1)
+          a[1]=ln1;
+          a[2]=ln2;
+          ln1n=ln1->next;
+          ln2p=ln2->prev;
+          swap(ln1,ln2);
+          ln1=ln1n;
+          ln2=ln2p;
+          if(ln1==a[2])
             break;
+        }
+      }
 
+      void swap(ListNode *a,ListNode *b)
+      {
+        if(a->next!=b)
+        {
+          ListNode *ap,*bn,*an;
+          an=a->next;
+          bn=b->next;
+          ap=a->prev;
+          a->next=b->next;
+          if(bn!=NULL)
+            bn->prev=a;
+          else
+          {
+            end=a;
+            a->next=NULL;
+          }
+          b->prev->next=a;
+          a->prev=b->prev;
+          if(ap!=NULL)
+            ap->next=b;
+          else
+          {
+            begin=b;
+            b->prev=NULL;
+          }
+          b->prev=ap;
+          an->prev=b;
+          b->next=an;
+        }
+        else
+        {
+          ListNode *ap,*bn;
+          bn=b->next;
+          ap=a->prev;
+
+          a->next=b->next;
+          if(bn!=NULL)
+            b->next->prev=a;
+          else
+            {
+              end=a;
+              a->next=NULL;
+            }
+          a->prev=b;
+          b->next=a;
+          if(ap!=NULL)
+          {
+            ap->next=b;
+            b->prev=ap;
+          }
+          else
+          {
+            begin=b;
+            b->prev=NULL;
+          }
         }
       }
 
@@ -234,17 +270,17 @@ class List {
   {
     List l;
     ListNode *a,*b;
-    l.push_back(1);
-    a=l.push_back(2);
+    a=l.push_back(1);
+    l.push_back(2);
     l.push_back(3);
     l.push_back(4);
-    b=l.push_back(5);
-    l.push_back(6)
+    l.push_back(5);
+    b=l.push_back(6);
 
 
     l.print();
-    //l.swap_pairs();
     l.reverse_segment(a,b);
+    //l.swap(a,b);
     cout<<endl;
     l.print();
 
