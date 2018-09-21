@@ -113,18 +113,12 @@ RUN \
 RUN \
     cd ~ && \
     git clone https://github.com/mapillary/OpenSfM.git && \
-    cd OpenSfm && \
+    cd OpenSfM && \
     pip install -r requirements.txt && \
     python setup.py build
 
 RUN echo "export PATH=$PATH:/usr/local/bin/OpenMvs" >> ~/.profile \
     source ~/.profile
 RUN rm -rf ~/building
+RUN echo "export PATH=$PATH:/usr/local/bin/OpenMVS" >> ~/.bashrc
 
-#openmvg
-RUN apt-get install -y libpng-dev libjpeg-dev libtiff-dev libxxf86vm1 libxxf86vm-dev libxi-dev libxrandr-dev && \
-  apt-get install -y graphviz && \
-  git clone --recursive https://github.com/openMVG/openMVG.git && \
-  mkdir openMVG_Build && cd openMVG_Build && \
-  cmake -DCMAKE_BUILD_TYPE=RELEASE ../openMVG/src/ && \
-  cmake --build . --target install
