@@ -7,6 +7,7 @@ openMVG_main_SfMInit_ImageListing -i [] -d [] -o []
     or using the -f option on openMVG_main_SfMInit_ImageListing (-f std::max(w,h)*1.2)
 
 -d openMVG/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt
+
 openMVG_main_ComputeFeatures -i [..\matches\sfm_data.json] -o [...\matches]
 openMVG_main_ComputeMatches -i [..\matches\sfm_data.json] -o [...\matches
 openMVG_main_IncrementalSfM -i Dataset/matches/sfm_data.json -m Dataset/matches/ -o Dataset/out_Incremental_Reconstruction/
@@ -15,6 +16,7 @@ mvs
 
 openMVG_main_openMVG2openMVS -i sfm_data.bin -o scene.mvs
 bin/opensfm export_openmvs
+
 DensifyPointCloud scene.mvs
 ReconstructMesh scene_dense.mvs
 RefineMesh scene_mesh.mvs
