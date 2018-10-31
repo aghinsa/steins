@@ -2,6 +2,8 @@
 2. [OpenMVS](#openmvs)
 3. [OpenCV Contrib](#opencv)
 4. [SSH](#ssh)
+5. [Tensorboard](#tensorboard)
+6. [Docker](#docker)
 
 ### <a name="openmvg"></a> OpenMVG
 * -d openMVG/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt
@@ -46,7 +48,28 @@ make -j4
 sudo make install  
 cd /usr/local/lib/python3.6/site-packages/  
 sudo mv cv2.cpython-36m-x86_64-linux-gnu.so cv2.so  
-</code>
+</code>  
 
 >sym link the installation to anaconda python  
 ln -s /usr/local/lib/python3.6/site-packages/cv2.so cv2.so
+
+
+### <a name="ssh" ></a>SSH  
+* [Reverese Tunelling](https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work) explained
+* Closing an active session  
+  > sudo netstat -plant | grep 52698  
+  > sudo kill -9 2144  
+
+* 52698 is the port,2144 is t he process
+
+### <a name="tensorboard"></a> Tensorboard
+* [Checkpoints and summary](https://web.stanford.edu/class/cs20si/2017/lectures/notes_05.pdf)
+
+### <a name="docker"></a> Docker  
+
+* docker ps : list running containers
+* docker images 
+* docker run -it 
+  - docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+* docker build -f ./dockerfile -t 'name:tag'
+* docker run -v /host/directory:/container/directory -other -options image_name command_to_run

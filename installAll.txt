@@ -1,3 +1,5 @@
+mvs
+
 sudo apt-get update -qq && sudo apt-get install -qq && \
 sudo apt-get -y install build-essential git mercurial cmake libpng-dev libjpeg-dev libtiff-dev libglu1-mesa-dev libxmu-dev libxi-dev && \
 sudo hg clone https://bitbucket.org/eigen/eigen#3.2 && \
