@@ -24,6 +24,7 @@
 ReconstructMesh scene_dense.mvs  
 RefineMesh scene_mesh.mvs  
 TextureMesh scene_dense_mesh.mvs  
+TextureMEsh scene_dense_mesh.mvs --export-type obj  
 TextureMesh.exe --resolution-level 3 scene_dense_mesh.mvs
 
 
@@ -71,5 +72,7 @@ ln -s /usr/local/lib/python3.6/site-packages/cv2.so cv2.so
 * docker images 
 * docker run -it 
   - docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
-* docker build -f ./dockerfile -t 'name:tag'
+* docker build -t 'name:tag' .
 * docker run -v /host/directory:/container/directory -other -options image_name command_to_run
+* [Cheatsheet](https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes)
+* docker run -it --rm -v host_dir:container_dir --name give_name image_name
