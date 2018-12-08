@@ -38,13 +38,14 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
 	-DCMAKE_INSTALL_PREFIX=/usr/local \  
 	-DINSTALL_PYTHON_EXAMPLES=ON \  
 	-DINSTALL_C_EXAMPLES=OFF \  
-	-DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.4.1/modules \  
+	-DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \  
 	-DPYTHON_EXECUTABLE=~/anaconda3/bin/python3 \  
 	-DPYTHON_LIBRARY=~/anaconda3/lib/libpython3.6m.so \  
 	-DPYTHON_NUMPY_INCLUDE_DIR=~/anaconda3/lib/python3.6/site-packages/numpy/core \  
 	-DPYTHON_PACKAGES_PATH=~/anaconda3/lib/python3.6/site-packages \  
 	-DBUILD_opencv_python3=yes \  
-	-DBUILD_EXAMPLES=ON ..  
+	-DBUILD_EXAMPLES=ON  \
+  -D WITH_OPENNI=ON ..
 make -j4  
 sudo make install  
 cd /usr/local/lib/python3.6/site-packages/  
