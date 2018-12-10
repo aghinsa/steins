@@ -1,8 +1,9 @@
 import tensorflow as tf 
 import cv2
 import numpy as np
-from imgaug import augmenters as iaa
+# from imgaug import augmenters as iaa
 import argparse
+import glob
 
 def create_class_list (parent_dir):
     f=open("class_list.txt","w+")
@@ -14,6 +15,7 @@ def create_class_list (parent_dir):
         for image in temp:
             f.write("{} {}".format(image,class_name))
             f.write('\n')
+    print("Read file {}".format(len(sub)))
     f.close()
 
 def _setter(filename,label):
@@ -22,11 +24,11 @@ def _setter(filename,label):
     """
     # image_string=tf.read_file(filename)
     # image=tf.image.decode_jpeg(image_string)
-    image=cv2.imread(filename)
-    image=cv2.cvtColor(gray,cv2.COLOR_BGR2RGB)
-    seq = iaa.Sequential([
-        iaa.Crop(px=(0, 16)),iaa.Fliplr(0.5),iaa.GaussianBlur(sigma=(0, 3.0))])
-    image_aug = seq.augment_images(image)
+    image=cv2.imread(filename.decode())
+    image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    # seq = iaa.Sequential([
+    #     iaa.Crop(px=(0, 16)),iaa.Fliplr(0.5),iaa.GaussianBlur(sigma=(0, 3.0))])
+    # image_aug = seq.augment_images(image)
     return image,label
 
 # def _augment(image,label):

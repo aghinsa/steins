@@ -45,7 +45,7 @@ def _get_block_sizes(resnet_size):
     raise ValueError(err)
     
 
-model=resnet_model.Model(resnet_size=RESNET_SIZE, bottleneck, num_classes=NUM_CLASSES, 
+model=resnet_model.Model(resnet_size=RESNET_SIZE,bottleneck=False, num_classes=NUM_CLASSES, 
                 num_filters=64,kernel_size=7,conv_stride=2, 
                 first_pool_size=3, first_pool_stride=2,
                 block_sizes=_get_block_sizes(RESNET_SIZE), 
@@ -60,10 +60,24 @@ if __name__=="__main__":
     args=parser.parse_args()
     data_dir=args.input_dir
     
-    dataset=trail_data.custom_input_fn(data_dir,batch_size=BATCH_SIZE)
+    print("starting")
+    dataset=trial_data.custom_input_fn(data_dir,batch_size=BATCH_SIZE)
     iterator=dataset.make_initializable_iterator()
+    print("geting data")
+    initi=iterator.initializer
     images,labels=iterator.get_next()
-    _outs=model.__call__(images,training=TRAINING)
+    print("got data")
+    # images=images.set_shape(tf.TensorShape([BATCH_SIZE,250,250,3]))
+    print(images.shape)
+    #
     
     sess=tf.Session()
-    outs=sess.run(_outs)
+    sess.run(initi)
+  
+    img=sess.run(images)
+    img=img.astype(np.uint8)
+    img=tf.convert_to_tensor (img)
+    print(img.shape)
+    _outs=model.__call__(img,training=TRAINING)
+    out=sess.run(_outs)
+    

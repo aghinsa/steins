@@ -19,11 +19,12 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import glob 
 
 from absl import app as absl_app
 from absl import flags
 import tensorflow as tf  # pylint: disable=g-bad-import-order
-from imgaug import augmenters as iaa
+# from imgaug import augmenters as iaa
 
 from official.utils.flags import core as flags_core
 from official.utils.logs import logger
@@ -170,7 +171,7 @@ def create_class_list (parent_dir):
             f.write('\n')
     f.close()
 
-def _setter(filename):
+def _setter(filename,label):
     """
     images :image path
     """
@@ -181,7 +182,11 @@ def _setter(filename):
     seq = iaa.Sequential([
         iaa.Crop(px=(0, 16)),iaa.Fliplr(0.5),iaa.GaussianBlur(sigma=(0, 3.0))])
     image_aug = seq.augment_images(image)
-    return image
+    return image,label
+def _setter_tf(filename,label):
+    name=tf.read_file(filename)
+    image=tf.image.decode_jpeg(name)
+    return image,label
 
 # def _augment(image,label):
 #     seq = iaa.Sequential([
@@ -211,13 +216,15 @@ def custom_input_fn(data_dir, batch_size,):
     
     dataset=tf.data.Dataset.from_tensor_slices((filenames,labels))
     
-    dataset=dataset.apply(tf.contrib.data.map_and_batch(
-                lambda filename,label:tf.py_func(_setter,[filename,label],[tf.uint8,label.dtype]),
-                batch_size,
-                num_parallel_batches=4,)
-                )
+    # dataset=dataset.apply(tf.contrib.data.map_and_batch(
+    #             lambda filename,label:tf.py_func(_setter,[filename,label],[tf.uint8,label.dtype]),
+    #             batch_size,
+    #             num_parallel_batches=4,)
+    #             )
+    # dataset=dataset.apply(tf.contrib.data.map_and_batch(_setter_tf,batch_size,num_parallel_batches=4))
     
-    # datasset=dataset.map(_setter)
+    
+    datasset=dataset.map(lambda filename,label: _setter_tf(filename,label))
     # dataset=dataset.batch(batch_size)
     dataset = dataset.prefetch(buffer_size=batch_size)
     return dataset
@@ -253,17 +260,18 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1, num_gpus=None,
   #     tf.data.TFRecordDataset, cycle_length=10))
   
   dataset=custom_input_fn(data_dir, batch_size)
-  return resnet_run_loop.process_record_dataset(
-      dataset=dataset,
-      is_training=is_training,
-      batch_size=batch_size,
-      shuffle_buffer=_SHUFFLE_BUFFER,
-      parse_record_fn=parse_record,
-      num_epochs=num_epochs,
-      num_gpus=num_gpus,
-      examples_per_epoch=_NUM_IMAGES['train'] if is_training else None,
-      dtype=dtype
-  )
+  return dataset
+  # return resnet_run_loop.process_record_dataset(
+  #     dataset=dataset,
+  #     is_training=is_training,
+  #     batch_size=batch_size,
+  #     shuffle_buffer=_SHUFFLE_BUFFER,
+  #     parse_record_fn=parse_record,
+  #     num_epochs=num_epochs,
+  #     num_gpus=num_gpus,
+  #     examples_per_epoch=_NUM_IMAGES['train'] if is_training else None,
+  #     dtype=dtype
+  # )
 
 
 def get_synth_input_fn(dtype):
