@@ -50,13 +50,13 @@ def hard_k_negatives_postives(vecs,labels,k=1):
     distances_mod=distances*tf.to_float(tf.logical_not(n_mask))
     distances_mod=distances_mod+max_in_row*tf.to_float(tf.logical_not(n_mask))
     #hard_mins=tf.reduce_min(distances_mod,axis=1,keepdims=True)
-    min_vals,_=tf.math.top_k(-distances_mod,k=k)
+    min_vals,_=tf.nn.top_k(-distances_mod,k=k)
     hard_k_negatives=-min_vals
     ####################################
     
     p_mask=_positive_mask(labels)
     distances_mod=distances*tf.to_float(p_mask)
-    hard_k_positives,_=tf.math.top_k(distances_mod,k=k )
+    hard_k_positives,_=tf.nn.top_k(distances_mod,k=k )
     
     return hard_k_negatives,hard_k_positives
     #(b,1)

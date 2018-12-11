@@ -2,7 +2,7 @@
 python3 resnet.py -i path_to_dataset
 """
 
-import resnet_model
+import new_model
 import tensorflow as tf
 import numpy as np 
 import argparse
@@ -60,7 +60,7 @@ def embed_normal(images,labels,model,shape=(-1,250,250,3)):
   images=tf.cast(images,dtype=tf.float32)
   labels=tf.strings.to_number(labels)
   embedings=model.__call__(images,training=TRAINING)
-  embedings=tf.nn.l2_normalize(embedings,axis=0)
+  # embedings=tf.nn.l2_normalize(images,axis=0)
   return embedings,labels
 
                 
@@ -71,15 +71,7 @@ if __name__=="__main__":
     data_dir=args.input_dir
 
     sess=tf.Session()
-    model=resnet_model.Model(resnet_size=RESNET_SIZE,bottleneck=False, 
-                num_classes=NUM_CLASSES, 
-                num_filters=64,kernel_size=7,conv_stride=2, 
-                first_pool_size=3, first_pool_stride=2,
-                block_sizes=_get_block_sizes(RESNET_SIZE), 
-                block_strides=[1, 2, 2, 2],
-                resnet_version=RESNET_VERSION, data_format=None,
-                dtype=DTYPE,
-                sess=sess)
+    
     
     print("starting")
     dataset=data.custom_input_fn(data_dir,batch_size=BATCH_SIZE)
@@ -89,20 +81,23 @@ if __name__=="__main__":
     tf_init_g=tf.global_variables_initializer()
     tf_init_l = tf.local_variables_initializer()
     sess.run(it_init)
-    sess.run(tf_init_g)
-    sess.run(tf_init_l)
-
-
     images,labels=iterator.get_next()
-    embedings,labels=embed_normal(images,labels,model=model)
-    
-    embedings=sess.run(embedings)
-    labels=sess.run(labels)
-    
-    
-    print(embedings.shape)
-    print(labels)
-    loss=triplet_loss.hard_triplet_loss(embedings,labels,margin=0.3,k=1)
-    print(loss)
-    
-    
+    shape=(-1,250,250,3)
+    images=tf.reshape(images,shape)
+    labels=tf.reshape(labels,(-1,1))
+    images=tf.cast(images,dtype=tf.float32)
+    labels=tf.strings.to_number(labels)
+
+    inputs=new_model.network(sess,images,resnet_size=RESNET_SIZE,bottleneck=False, 
+                num_classes=NUM_CLASSES, 
+                num_filters=64,kernel_size=7,conv_stride=2, 
+                first_pool_size=3, first_pool_stride=2,
+                block_sizes=_get_block_sizes(RESNET_SIZE), 
+                block_strides=[1, 2, 2, 2],
+                resnet_version=RESNET_VERSION, data_format=None,
+                dtype=DTYPE,
+                training=True)
+    print(inputs)
+    # sess.run(tf_init_g)
+    # sess.run(tf_init_l)
+    # print(sess.run(inputs)
