@@ -2,7 +2,7 @@ import resnet_model
 import tensorflow as tf
 import numpy as np 
 import argparse
-import trial_data
+import data
 
 BATCH_SIZE=4
 RESNET_SIZE=18
@@ -69,23 +69,18 @@ if __name__=="__main__":
     it_init=iterator.initializer
     tf_init_g=tf.global_variables_initializer()
     tf_init_l = tf.local_variables_initializer()
+    
     images,labels=iterator.get_next()
-  
     images=tf.reshape(images,(-1,250,250,3))
     labels=tf.reshape(labels,(-1,1))
     images=tf.cast(images,dtype=tf.float32)
     labels=tf.strings.to_number(labels)
     
     
-    
-    
+  
     sess.run(tf_init_g)
     sess.run(tf_init_l)
     sess.run(it_init)
-
-    print("VAriables printing")
-    print([n.name for n in tf.get_default_graph().as_graph_def().node])
-    print(len([v for v in tf.trainable_variables()]))
     
     outs=model.__call__(images,training=TRAINING)
     print(outs)

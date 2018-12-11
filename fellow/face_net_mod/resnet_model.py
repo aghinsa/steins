@@ -142,7 +142,7 @@ def _building_block_v1(inputs, filters, training, projection_shortcut, strides,
   inputs = conv2d_fixed_padding(
       inputs=inputs, filters=filters, kernel_size=3, strides=1,
       data_format=data_format)
-  print(inputs)
+  
   inputs = batch_norm(inputs, training, data_format)
   inputs += shortcut
   inputs = tf.nn.relu(inputs)
@@ -564,13 +564,11 @@ class Model(object):
       inputs = tf.layers.dense(inputs=inputs, units=self.num_classes)
       inputs = tf.identity(inputs, 'final_dense')
       # print(inputs)
-      print("End of __call")
+      
+
       print("Number of classes {}".format(self.num_classes))
       print("Out shape {}".format(inputs.shape))
       print()
-      print("len of trainble variables")
-      tvar=[v for v in tf.trainable_variables()]
-      print(len(tvar))
 
       tf_init_g=tf.global_variables_initializer()
       tf_init_l = tf.local_variables_initializer()
