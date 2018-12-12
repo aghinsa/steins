@@ -19,13 +19,16 @@ def _positive_mask(labels):
     return :mask(b,b) type:bool
          if i!=j and l[i]==l[j] mask =1
     """
-    labels=labels.reshape(-1)
+    # labels=labels.reshape(-1)
+    # labels=tf.reshape(labels,(-1))
     batch_size=tf.shape(labels)[0]
     ii=tf.cast(tf.eye(batch_size),bool)
     ij=tf.logical_not(ii)
     
-    #finding (b,b) with labels same
-    labels_same=tf.equal(tf.expand_dims(labels,0),tf.expand_dims(labels,1))
+    labels=tf.reshape(labels,[-1,1])
+    n=tf.shape(labels)[0]
+    labels_same=tf.tile(labels,(1,n))==tf.tile(tf.transpose(labels),(n,1))
+    # labels_same=tf.linalg.set_diag(labels_same,0)
     #if i!=j and l[i]==l[j] mask =1
     mask=tf.logical_and(labels_same,ij)
     return mask
@@ -36,8 +39,13 @@ def _negative_mask(labels):
     return :mask(b,b) type:bool
          if i!=j and l[i]!=l[j] mask =1
     """
-    labels=labels.reshape(-1)
-    mask=tf.equal(tf.expand_dims(labels,0),tf.expand_dims(labels,1))
+    # labels=labels.reshape(-1)
+    # labels=tf.reshape(labels,(-1))
+    # mask=tf.equal(tf.expand_dims(labels,0),tf.expand_dims(labels,1
+    labels=tf.reshape(labels,[-1,1])
+    n=tf.shape(labels)[0]
+    mask=tf.tile(labels,(1,n))==tf.tile(tf.transpose(labels),(n,1))
+    # mask=tf.linalg.set_diag(labels_same,0)
     mask=tf.logical_not(mask)
     return mask
     

@@ -4,9 +4,9 @@ import numpy as np
 import argparse
 import data
 
-BATCH_SIZE=4
+BATCH_SIZE=100
 RESNET_SIZE=18
-NUM_CLASSES=400
+NUM_CLASSES=128
 RESNET_VERSION=1
 DTYPE=tf.float32
 TRAINING=True
@@ -76,15 +76,17 @@ if __name__=="__main__":
     images=tf.cast(images,dtype=tf.float32)
     labels=tf.strings.to_number(labels)
     
+    print(images)
+    print(labels)
     
   
     sess.run(tf_init_g)
     sess.run(tf_init_l)
     sess.run(it_init)
     
-    outs=model.__call__(images,training=TRAINING)
+    outs,loss=model.network(images,labels,training=TRAINING)
     print(outs)
-    print(outs.shape)
+    print(loss)
     
     
     

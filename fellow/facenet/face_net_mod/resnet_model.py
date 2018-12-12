@@ -32,6 +32,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+import triplet_loss
 
 _BATCH_NORM_DECAY = 0.997
 _BATCH_NORM_EPSILON = 1e-5
@@ -487,7 +488,7 @@ class Model(object):
     return tf.variable_scope('resnet_model',
                              custom_getter=self._custom_dtype_getter)
 
-  def __call__(self, inputs, training):
+  def  network(self, inputs,labels, training):
     """Add operations to classify a batch of input images.
 
     Args:
@@ -549,13 +550,6 @@ class Model(object):
       if self.pre_activation:
         inputs = batch_norm(inputs, training, self.data_format)
         inputs = tf.nn.relu(inputs)
-        # print(inputs)
-
-      # The current top layer has shape
-      # `batch_size x pool_size x pool_size x final_size`.
-      # ResNet does an Average Pooling layer over pool_size,
-      # but that is the same as doing a reduce_mean. We do a reduce_mean
-      # here because it performs better than AveragePooling2D.
       axes = [2, 3] if self.data_format == 'channels_first' else [1, 2]
       inputs = tf.reduce_mean(inputs, axes, keepdims=True)
       inputs = tf.identity(inputs, 'final_reduce_mean')
@@ -564,8 +558,8 @@ class Model(object):
       inputs = tf.layers.dense(inputs=inputs, units=self.num_classes)
       inputs = tf.identity(inputs, 'final_dense')
       # print(inputs)
-      
-
+      loss=triplet_loss.hard_triplet_loss(inputs,labels)
+     
       print("Number of classes {}".format(self.num_classes))
       print("Out shape {}".format(inputs.shape))
       print()
@@ -574,6 +568,7 @@ class Model(object):
       tf_init_l = tf.local_variables_initializer()
       self.sess.run(tf_init_g)
       self.sess.run(tf_init_l)
-      inputs=self.sess.run(inputs)
+      loss=self.sess.run(loss)
+      # inputs=self.sess.run(inputs)
 
-      return inputs
+      return inputs,loss
