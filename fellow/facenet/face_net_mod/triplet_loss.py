@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.metrics.pairwise import euclidean_distances
+# from sklearn.metrics.pairwise import euclidean_distances
 
 def distance_mat(vecs):
     """
@@ -8,7 +8,9 @@ def distance_mat(vecs):
     return:(batch,batch)
         (i,j) in distances gives ||a-b||^2
     """
-    distances=euclidean_distances(vecs,vecs,squared=True)
+    # distances=euclidean_distances(vecs,vecs,squared=True)
+    distances=tf.square(tf.expand_dims(vecs,-1)-tf.transpose(vecs))
+    distances=tf.reduce_sum(distances,1)
     return distances
     
 def _positive_mask(labels):
@@ -85,7 +87,7 @@ def hard_triplet_loss(vecs,labels,margin=0.3,k=1):
         temp=tf.reduce_sum(temp,axis=1)
         loss=loss+tf.reduce_mean(temp)
     return loss
-    
+
 
 
 

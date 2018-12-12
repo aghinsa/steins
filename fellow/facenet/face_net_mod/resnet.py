@@ -63,7 +63,7 @@ if __name__=="__main__":
                 sess=sess)
     
     print("starting")
-    dataset=trial_data.custom_input_fn(data_dir,batch_size=BATCH_SIZE)
+    dataset=data.custom_input_fn(data_dir,batch_size=BATCH_SIZE)
     iterator=dataset.make_initializable_iterator()
   
     it_init=iterator.initializer
