@@ -500,6 +500,7 @@ class Model(object):
     Returns:
       A logits Tensor with shape [<batch_size>, self.num_classes].
     """
+
     inputs,labels=iterator.get_next()
     inputs=tf.reshape(inputs,(-1,250,250,3))
     labels=tf.reshape(labels,(-1,1))
@@ -588,9 +589,16 @@ class Model(object):
       self.sess.run(tf_init_g)
       self.sess.run(tf_init_l)
       for i in range(num_epochs):
-          self.sess.run(a)
-      loss=self.sess.run(self.loss)
-      print("one done")
+          try:
+              while(1):
+                  self.sess.run(a)
+                  loss=self.sess.run(self.loss)
+                  print(loss)
+          except tf.errors.OutOfRangeError:
+              print("Epoch {} completed".format(i))
+              
+      
+      print("All done")
       return loss
       
       
