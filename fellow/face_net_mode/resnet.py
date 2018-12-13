@@ -4,7 +4,7 @@ import numpy as np
 import argparse
 import data
 
-BATCH_SIZE=100
+BATCH_SIZE=4
 RESNET_SIZE=18
 NUM_CLASSES=128
 RESNET_VERSION=1
@@ -67,24 +67,24 @@ if __name__=="__main__":
     iterator=dataset.make_initializable_iterator()
   
     it_init=iterator.initializer
-    tf_init_g=tf.global_variables_initializer()
-    tf_init_l = tf.local_variables_initializer()
     
-    images,labels=iterator.get_next()
-    images=tf.reshape(images,(-1,250,250,3))
-    labels=tf.reshape(labels,(-1,1))
-    images=tf.cast(images,dtype=tf.float32)
-    labels=tf.strings.to_number(labels)
-    
-    print(images)
-    print(labels)
+    # images,labels=iterator.get_next()
+    # images=tf.reshape(images,(-1,250,250,3))
+    # labels=tf.reshape(labels,(-1,1))
+    # images=tf.cast(images,dtype=tf.float32)
+    # labels=tf.strings.to_number(labels)
+    # 
+    # print(images)
+    # print(labels)
     
   
-    sess.run(tf_init_g)
-    sess.run(tf_init_l)
+    # sess.run(tf_init_g)
+    # sess.run(tf_init_l)
     sess.run(it_init)
     
-    outs,loss=model.network(images,labels,training=TRAINING)
+    # outs,loss=model.network(images,labels,training=TRAINING)
+    outs,loss=model.network(iterator,training=TRAINING)
+    loss=model.minimize(num_epochs=2)
     print(outs)
     print(loss)
     

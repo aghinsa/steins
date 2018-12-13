@@ -358,7 +358,7 @@ def block_layer(inputs, filters, bottleneck, block_fn, blocks, strides,
 class Model(object):
   """Base class for building the Resnet Model."""
 
-  def __init__(self, resnet_size, bottleneck, num_classes, num_filters,
+  def __init__(self,resnet_size, bottleneck, num_classes, num_filters,
                kernel_size,
                conv_stride, first_pool_size, first_pool_stride,
                block_sizes, block_strides,
@@ -488,7 +488,8 @@ class Model(object):
     return tf.variable_scope('resnet_model',
                              custom_getter=self._custom_dtype_getter)
 
-  def  network(self, inputs,labels, training):
+  # def  network(self, inputs,labels, training):
+  def network(self,iterator,training):
     """Add operations to classify a batch of input images.
 
     Args:
@@ -499,6 +500,12 @@ class Model(object):
     Returns:
       A logits Tensor with shape [<batch_size>, self.num_classes].
     """
+    inputs,labels=iterator.get_next()
+    inputs=tf.reshape(inputs,(-1,250,250,3))
+    labels=tf.reshape(labels,(-1,1))
+    inputs=tf.cast(inputs,dtype=tf.float32)
+    labels=tf.strings.to_number(labels)
+    
     print("Resnet Version={}".format(self.resnet_version))
     print("data Format={}".format(self.data_format))
     print()
@@ -563,12 +570,27 @@ class Model(object):
       print("Number of classes {}".format(self.num_classes))
       print("Out shape {}".format(inputs.shape))
       print()
+      self.loss=tf.identity(loss)
+      # tf_init_g=tf.global_variables_initializer()
+      # tf_init_l = tf.local_variables_initializer()
+      # self.sess.run(tf_init_g)
+      # self.sess.run(tf_init_l)
+      # loss=self.sess.run(loss)
+      # inputs=self.sess.run(inputs)
 
+      return inputs,loss
+      
+  def minimize(self,num_epochs):
+      adam = tf.train.AdamOptimizer(learning_rate=0.3)
+      a = adam.minimize(self.loss)
       tf_init_g=tf.global_variables_initializer()
       tf_init_l = tf.local_variables_initializer()
       self.sess.run(tf_init_g)
       self.sess.run(tf_init_l)
-      loss=self.sess.run(loss)
-      # inputs=self.sess.run(inputs)
-
-      return inputs,loss
+      for i in range(num_epochs):
+          self.sess.run(a)
+      loss=self.sess.run(self.loss)
+      print("one done")
+      return loss
+      
+      
